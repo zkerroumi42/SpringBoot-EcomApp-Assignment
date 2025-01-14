@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wassit-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wassit-app
+  template:
+    metadata:
+      labels:
+        app: wassit-app
+    spec:
+      containers:
+        - name: wassit-app
+          image: zakerroumi/wassit-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://wassit-mysql-db-service:3306/wassit"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "root"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wassit-app-service
+spec:
+  selector:
+    app: wassit-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer

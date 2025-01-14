@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  wassit-mysql-db:                          # MySQL service name
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root             # MySQL root password
+      MYSQL_DATABASE: wassit                # MySQL database name
+      MYSQL_USER: root                       # The root user has all privileges
+      MYSQL_PASSWORD: root                  # MySQL root password (again)
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql           # Persist MySQL data
+    networks:
+      - wassit-network                      # Assign to custom network
+
+  springboot-app:
+    image: wassit-app                       # Spring Boot app image
+    build:
+      context: .                            # Build the Dockerfile in the current directory
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://wassit-mysql-db:3306/wassit   # MySQL container/service name
+      - SPRING_DATASOURCE_USERNAME=root     # MySQL root username
+      - SPRING_DATASOURCE_PASSWORD=root     # MySQL root password
+    ports:
+      - "8080:8080"                         # Expose Spring Boot app on port 8080
+    networks:
+      - wassit-network                      # Assign to custom network
+  angular-frontend:
+    image: wassit-frontend
+    build:
+      context: .
+    ports:
+      - "4200:80"
+    networks:
+      - wassit-network
+
+
+volumes:
+  mysql-data:                                # Volume for MySQL data persistence
+
+networks:
+  wassit-network:                            # Define a custom network
+    driver: bridge                           # Default driver for container-to-container communication

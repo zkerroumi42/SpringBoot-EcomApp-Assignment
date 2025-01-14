@@ -1,0 +1,27 @@
+<div class="container">
+  <h2>Liste des Propriétaires</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Téléphone</th>
+      <th>Adresse</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let proprietaire of proprietaires">
+      <td>{{ proprietaire.nom }}</td>
+      <td>{{ proprietaire.prenom }}</td>
+      <td>{{ proprietaire.telephone }}</td>
+      <td>{{ proprietaire.adresse }}</td>
+      <td>
+        <button mat-raised-button color="primary" (click)="editProprietaire(proprietaire.id)">Modifier</button>
+        <button mat-raised-button color="warn" (click)="deleteProprietaire(proprietaire.id)">Supprimer</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

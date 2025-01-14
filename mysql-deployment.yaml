@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wassit-mysql-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wassit-mysql-db
+  template:
+    metadata:
+      labels:
+        app: wassit-mysql-db
+    spec:
+      containers:
+        - name: mysql
+          image: zakerroumi/mysql:8  # Remplacez <username> par votre propre nom d'utilisateur ou registre
+          env:  # Utilisez "env" au lieu de "environment"
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"  # Définir le mot de passe root
+            - name: MYSQL_DATABASE
+              value: "wassit"  # Nom de la base de données
+            - name: MYSQL_USER
+              value: "root"  # Nom d'utilisateur
+            - name: MYSQL_PASSWORD
+              value: "root"  # Mot de passe utilisateur
+          ports:
+            - containerPort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wassit-mysql-db-service
+spec:
+  selector:
+    app: wassit-mysql-db
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP  # Utiliser ClusterIP pour une communication interne au cluster

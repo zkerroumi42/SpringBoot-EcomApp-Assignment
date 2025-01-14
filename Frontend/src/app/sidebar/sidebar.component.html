@@ -1,0 +1,29 @@
+<aside [ngClass]="{ 'aside-nav': isOpen }" class="d-flex py-4 flex-column">
+  <div class="mx-auto my-3">
+    <input
+      (click)="ToggleOpen()"
+      class="label-check"
+      id="label-check"
+      type="checkbox"
+      [(ngModel)]="isOpen"
+    />
+    <label for="label-check" class="hamburger-label">
+      <div class="line1"></div>
+      <div class="line2"></div>
+      <div class="line3"></div>
+      <label></label>
+    </label>
+  </div>
+  <hr class="hr" />
+  <nav class="d-flex py-5 flex-column">
+    <span routerLink="/appartements" class="mx-auto nav-items w-100 py-3 ps-3">
+      <i style="font-size: 20px" class="bi bi-house-door-fill"></i>
+      <b *ngIf="!isOpen"> Appartements</b>
+    </span>
+
+    <span routerLink="/proprietaire" class="mx-auto nav-items w-100 py-3 ps-3">
+      <i style="font-size: 20px" class="bi bi-person-circle"></i>
+      <b *ngIf="!isOpen"> Propriétaire</b>
+    </span>
+  </nav>
+</aside>

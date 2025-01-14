@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wassit-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wassit-frontend
+  template:
+    metadata:
+      labels:
+        app: wassit-frontend
+    spec:
+      containers:
+        - name: wassit-frontend
+          image: zakerroumi/wassit-frontend:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wassit-frontend-service
+spec:
+  selector:
+    app: wassit-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

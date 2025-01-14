@@ -1,0 +1,142 @@
+<div class="container">
+  <!-- Liste des appartements -->
+  <div *ngIf="!selectedAppartement">
+    <button mat-raised-button color="accent" (click)="openAppartementForm()">Ajouter un Appartement</button>
+    <div class="card-container">
+      <div *ngIf="!appartementFormVisible" class="card-container">
+        <mat-card *ngFor="let appartement of dataSource.data" class="mat-card">
+
+          <mat-card-header>
+            <mat-card-title>{{ appartement.ville }}</mat-card-title>
+            <mat-card-subtitle>{{ appartement.secteur }}</mat-card-subtitle>
+          </mat-card-header>
+          <img class="card-image" src="https://imganuncios.mitula.net/apprt_oued_el_hmera_1150085720532438703.jpg" alt="Appartement">
+          <mat-card-content>
+            <p><strong>Prix:</strong> {{ appartement.prix }} MAD</p>
+            <p><strong>Max Membres:</strong> {{ appartement.maxMembre }}</p>
+            <p><strong>Status:</strong> {{ appartement.status }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="showChambres(appartement)">
+              Chambres
+            </button><pre>   </pre>
+            <button mat-raised-button color="warn" (click)="openAppartementForm(appartement)">
+              Modifier
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <!-- Formulaire d'ajout/modification d'appartement -->
+      <div *ngIf="appartementFormVisible" class="form-container">
+        <h2>{{ appartementForm.id === 0 ? 'Ajouter un Appartement' : 'Modifier un Appartement' }}</h2>
+        <form (ngSubmit)="saveAppartement()">
+          <!-- Ville -->
+          <mat-form-field appearance="outline" class="narrow-form-field">
+            <mat-label>Ville</mat-label>
+            <input matInput [(ngModel)]="appartementForm.ville" name="ville" required>
+          </mat-form-field>
+
+          <!-- Secteur -->
+          <mat-form-field appearance="outline" class="narrow-form-field">
+            <mat-label>Secteur</mat-label>
+            <input matInput [(ngModel)]="appartementForm.secteur" name="secteur" required>
+          </mat-form-field>
+
+          <!-- Prix -->
+          <mat-form-field appearance="outline" class="narrow-form-field">
+            <mat-label>Prix</mat-label>
+            <input matInput type="number" [(ngModel)]="appartementForm.prix" name="prix" required>
+          </mat-form-field>
+
+          <!-- Max Membres -->
+          <mat-form-field appearance="outline" class="narrow-form-field">
+            <mat-label>Max Membres</mat-label>
+            <input matInput type="number" [(ngModel)]="appartementForm.maxMembre" name="maxMembre" required>
+          </mat-form-field>
+
+          <!-- Description -->
+          <mat-form-field appearance="outline" class="narrow-form-field">
+            <mat-label>Description</mat-label>
+            <textarea matInput [(ngModel)]="appartementForm.description" name="description"></textarea>
+          </mat-form-field>
+
+          <!-- Status -->
+          <mat-form-field appearance="outline" class="narrow-form-field">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="appartementForm.status" name="status" required>
+              <mat-option value="disponible">Disponible</mat-option>
+              <mat-option value="loué">Loué</mat-option>
+              <mat-option value="en maintenance">En maintenance</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- ID Propriétaire -->
+          <mat-form-field appearance="outline" class="narrow-form-field">
+            <mat-label>ID Propriétaire</mat-label>
+            <input matInput type="number" [(ngModel)]="appartementForm.proprietaireId" name="proprietaireId" required>
+          </mat-form-field>
+
+          <!-- Boutons -->
+          <div class="form-actions">
+            <button mat-raised-button type="submit" color="primary">Sauvegarder</button>
+            <button mat-raised-button (click)="closeAppartementForm()" color="warn">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gestion des chambres -->
+  <div *ngIf="selectedAppartement">
+    <h3>Chambres pour {{ selectedAppartement.ville }}</h3>
+    <button mat-raised-button (click)="closeChambres()">Retour</button>
+
+    <!-- Liste des chambres dans des cartes Material -->
+    <div class="card-container">
+      <mat-card *ngFor="let chambre of selectedAppartement.chambres" class="mat-card">
+
+        <mat-card-header>
+          <mat-card-title>Chambre {{ chambre.id }}</mat-card-title>
+          <mat-card-subtitle>Prix: {{ chambre.prix }} MAD</mat-card-subtitle>
+        </mat-card-header>
+        <img class="card-image" src="https://imganuncios.mitula.net/appartement_a_vendre_a_oujda_4290000731528205373.jpg" alt="Chambre">
+        <mat-card-content>
+          <p><strong>Description:</strong> {{ chambre.description }}</p>
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Formulaire pour ajouter une chambre -->
+    <button mat-raised-button color="accent" (click)="openChambreForm()">Ajouter une Chambre</button>
+    <div *ngIf="chambreFormVisible" class="form-container">
+      <h2>{{ 'Ajouter une Chambre'}}</h2>
+      <form (ngSubmit)="addChambre()">
+        <!-- Description -->
+        <mat-form-field appearance="outline" class="narrow-form-field">
+          <mat-label>Description de la chambre</mat-label>
+          <input matInput [(ngModel)]="chambreForm.description" name="description" required>
+        </mat-form-field>
+
+        <!-- Prix -->
+        <mat-form-field appearance="outline" class="narrow-form-field">
+          <mat-label>Prix</mat-label>
+          <input matInput type="number" [(ngModel)]="chambreForm.prix" name="prix" required>
+        </mat-form-field>
+
+        <!-- Type -->
+        <mat-form-field appearance="outline" class="narrow-form-field">
+          <mat-label>Type</mat-label>
+          <input matInput [(ngModel)]="chambreForm.type" name="type">
+        </mat-form-field>
+
+        <!-- Boutons -->
+        <div class="form-actions">
+          <button mat-raised-button type="submit" color="primary">Sauvegarder</button>
+          <button mat-raised-button (click)="openChambreForm()" color="warn">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
